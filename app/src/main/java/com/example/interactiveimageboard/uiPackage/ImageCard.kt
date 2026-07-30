@@ -19,6 +19,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
+import android.media.MediaPlayer
+import androidx.compose.ui.platform.LocalContext
+import com.example.interactiveimageboard.R
 
 @Composable
 fun ImageCard(
@@ -27,6 +30,8 @@ fun ImageCard(
     onConfirm: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+
     Box(
         modifier = modifier
             .offset { IntOffset(image.x.roundToInt(), image.y.roundToInt()) }
@@ -36,7 +41,22 @@ fun ImageCard(
             model = image.uri,
             contentDescription = null,
             modifier = Modifier
-                .clickable { if (!image.isLocked){onClick()} }
+                .clickable {
+
+                    val player = MediaPlayer.create(context, R.raw.ping)
+
+                    player?.let {
+                        it.start()
+
+                        it.setOnCompletionListener { mediaPlayer ->
+                            mediaPlayer.release()
+                        }
+                    }
+
+                    if (!image.isLocked) {
+                        onClick()
+                    }
+                }
                 .pointerInput(Unit) {
                     detectTransformGestures { _, pan, zoom, _ ->
                         if (image.isSelected && !image.isLocked) {
