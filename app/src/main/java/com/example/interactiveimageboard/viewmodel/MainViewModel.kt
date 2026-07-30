@@ -20,4 +20,20 @@ class MainViewModel : ViewModel() {
 
         feedbackMessage.value = "${uris.size} imagem(ns) adicionada(s)"
     }
+
+    fun selectImage(id: Int) {
+        images.forEach {
+            it.isSelected = it.id == id
+        }
+    }
+
+    fun confirmSelectedImage() {
+        images.firstOrNull { it.isSelected }?.let {
+            it.isLocked = true
+            it.isSelected = false
+            feedbackMessage.value = "Imagem ${it.id} confirmada."
+        }
+
+
+    }
 }

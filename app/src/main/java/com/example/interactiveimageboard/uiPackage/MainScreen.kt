@@ -14,6 +14,7 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import kotlin.contracts.contract
+import androidx.compose.ui.draw.clipToBounds
 
 
 @Composable
@@ -42,18 +43,22 @@ fun MainScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Box(modifier = Modifier.fillMaxWidth().weight(1f).border(2.dp, androidx.compose.ui.graphics.Color.Gray), contentAlignment = Alignment.Center)
+        Box(modifier = Modifier.fillMaxWidth().weight(1f).border(2.dp, androidx.compose.ui.graphics.Color.Gray).clipToBounds(), contentAlignment = Alignment.Center)
         {
 
-            viewModel.images.forEach{
-                image -> ImageCard(image = image)
+            viewModel.images.forEach { image ->
+                ImageCard(
+                    image = image,
+                    onClick = { viewModel.selectImage(image.id) },
+                    onConfirm = { viewModel.confirmSelectedImage() }
+                )
             }
 
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text("Mensagem de feedback")
+        Text(viewModel.feedbackMessage.value)
 
     }
 
